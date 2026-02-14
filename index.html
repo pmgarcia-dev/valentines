@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>San Valentín</title>
+<link rel="icon" type="image/png" href="icono.png">
+
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #ffe6f0;
+    text-align: center;
+}
+
+.main-section {
+    margin-top: 40px;
+}
+
+img {
+    width: 350px;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+.button-section {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.button-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+button {
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#yesBtn {
+    background-color: #ff4d6d;
+    color: white;
+    width: 150px;
+    height: 70px;
+    font-size: 20px;
+}
+
+#noBtn {
+    background-color: #777;
+    color: white;
+    width: 150px;
+    height: 70px;
+    font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="main-section" id="contentSection">
+    <img src="minion.gif" alt="gif minion">
+    <h1>¿Quieres ser mi San Valentín?</h1>
+</div>
+
+<div class="button-section">
+    <div class="button-container" id="buttonContainer">
+        <button id="yesBtn">Sí</button>
+        <button id="noBtn">No</button>
+    </div>
+</div>
+
+<audio id="bgMusic" src="musica.mp3" loop autoplay></audio>
+<audio id="applauseSound" src="aplausos.mp3"></audio>
+
+<script>
+let noClickCount = 0;
+
+const mensajesNo = [
+    "¿Estás segura?",
+    "¿Segura, muy segura?",
+    "Tía, por favooor 🥺",
+    "Noma di que sí",
+    "Más te vale decir que sí 😠",
+    "Última oportunidad...",
+    "Última oportunidad...",
+    "Última oportunidad...",
+    "Última oportunidad...",
+    "Neta ya última"
+];
+
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const buttonContainer = document.getElementById("buttonContainer");
+const contentSection = document.getElementById("contentSection");
+const bgMusic = document.getElementById("bgMusic");
+const applauseSound = document.getElementById("applauseSound");
+
+/* volumen */
+bgMusic.volume = 0.2;
+
+/* Intentar autoplay al cargar */
+window.addEventListener("load", () => {
+    const playPromise = bgMusic.play();
+
+    if (playPromise !== undefined) {
+        playPromise.catch(() => {
+            /* Si el navegador bloquea autoplay,
+               se activa al primer clic */
+            document.body.addEventListener("click", iniciarMusica);
+        });
+    }
+});
+
+function iniciarMusica() {
+    bgMusic.play();
+    document.body.removeEventListener("click", iniciarMusica);
+}
+
+noBtn.addEventListener("click", function() {
+
+    if (noClickCount < mensajesNo.length) {
+        noBtn.textContent = mensajesNo[noClickCount];
+        noClickCount++;
+
+        /* Crecimiento del botón */
+        yesBtn.style.width = (yesBtn.offsetWidth + 40) + "px";
+        yesBtn.style.height = (yesBtn.offsetHeight + 20) + "px";
+        yesBtn.style.fontSize = (parseInt(window.getComputedStyle(yesBtn).fontSize) + 4) + "px";
+    } else {
+        noBtn.remove();
+
+        /* Sí ocupa más de la mitad de la pantalla */
+        yesBtn.style.width = "70vw";
+        yesBtn.style.height = "40vh";
+        yesBtn.style.fontSize = "50px";
+    }
+});
+
+yesBtn.addEventListener("click", function() {
+
+    /*bgMusic.pause();*/
+    applauseSound.play();
+
+    contentSection.innerHTML = `
+        <img src="yay2.gif" alt="gif feliz">
+        <h1>¡YAY!</h1>
+        <p>Vamos por unas hambuguesitas</p>
+        <img src="yay.gif" alt="gif feliz">
+    `;
+
+    buttonContainer.remove();
+});
+</script>
+
+</body>
+</html>
